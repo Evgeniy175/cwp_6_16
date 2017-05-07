@@ -1,7 +1,7 @@
 class PeopleService {
-  constructor(peopleRepository, bcrypt, config, errors) {
+  constructor(peopleRepository, peopleDataRepository, config, errors) {
     this.peopleRepository = peopleRepository;
-    this.bcrypt = bcrypt;
+    this.peopleDataRepository = peopleDataRepository;
     this.config = config;
     this.errors = errors;
 
@@ -23,8 +23,6 @@ class PeopleService {
         reject(validationErrors);
         return;
       }
-
-      this._encodePassword(person);
       
       this.peopleRepository.create(person)
       .then(data => {
@@ -35,9 +33,40 @@ class PeopleService {
     });
   }
 
-  _encodePassword(person) {
-    let salt = this.bcrypt.genSaltSync(10);
-    person.password = this.bcrypt.hashSync(person.password, salt);
+  createPersonData(personData) {
+    const personId = parseInt(personData.personId);
+
+    return new Promise((resolve, reject) => {
+      if (isNaN(personId)) {
+        reject(this.errors.invalidId);
+        return;
+      }
+
+      this.peopleRepository.createPeopleData(personData)
+        .then(res => {
+          if (res) resolve(res.dataValues);
+          else reject(this.errors.notFound);
+        })
+        .catch(reject);
+    });
+  }
+
+  getPersonData(personId) {
+    personId = parseInt(personId);
+
+    return new Promise((resolve, reject) => {
+      if (isNaN(personId)) {
+        reject(this.errors.invalidId);
+        return;
+      }
+
+      this.peopleRepository.getPeopleData(personId)
+        .then(res => {
+          if (res) resolve(res.dataValues);
+          else reject(this.errors.notFound);
+        })
+        .catch(reject);
+    });
   }
 
   read(id) {
@@ -50,7 +79,7 @@ class PeopleService {
       }
 
       this.peopleRepository.findById(id)
-      .then((res) => {
+      .then(res => {
         if (res) resolve(res.dataValues);
         else reject(this.errors.notFound);
       })
@@ -93,13 +122,13 @@ class PeopleService {
     };
   }
 
-  update(id, params) {
-    let u = {
-      realName: params.realName,
-      teamId: params.teamId
+  update(id, person) {
+    let p = {
+      realName: person.realName,
+      teamId: person.teamId
     };
 
-    let validationErrors = this._getValidationErrors(u);
+    let validationErrors = this._getValidationErrors(p);
     
     return new Promise((resolve, reject) => {
       if (validationErrors.length > 0) {
@@ -111,10 +140,10 @@ class PeopleService {
         reject(this.errors.invalidEntity);
         return;
       }
-      
-      this._encodePassword(u);
 
-      return this.peopleRepository.update(u, { where: { id }, limit: 1 })
+      person.id = id;
+
+      return this.peopleRepository.update(p, { where: { id }, limit: 1 })
       .then(data => resolve({ success: true }))
       .catch(reject);
     });

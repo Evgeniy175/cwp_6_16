@@ -3,8 +3,14 @@ class Repository {
     this.objects = [];
   }
 
-  findAll() {
-    return Promise.resolve(this.objects.map(elem => ({ dataValues: elem })));
+  findAll(params) {
+    if (!params) return Promise.resolve(this.objects.map(elem => ({ dataValues: elem })));
+
+    const where = params.where;
+    const keys = Object.keys(where);
+    const results = this.objects.filter(object => keys.every(key => object[key] === where[key]));
+
+    return Promise.resolve({ dataValues: results });
   }
 
   findById(id) {
@@ -12,15 +18,15 @@ class Repository {
     return Promise.resolve(result ? { dataValues: result } : null);
   }
 
+  find(params) {
+    return this.findOne(params);
+  }
+
   findOne(params) {
     const where = params.where;
     const keys = Object.keys(where);
     const results = this.objects.find(object => keys.every(key => object[key] === where[key]));
     return Promise.resolve({ dataValues: results });
-  }
-
-  find(params) {
-    return this.findOne(params);
   }
 
   findAndCountAll(params) {

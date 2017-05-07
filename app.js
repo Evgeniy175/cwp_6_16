@@ -4,7 +4,6 @@ const Sequelize = require('sequelize');
 const Jwt = require('jsonwebtoken');
 const CookieParser = require('cookie-parser');
 const BodyParser = require('body-parser');
-const BCrypt = require('bcryptjs');
 const Js2XmlParser = require('js2xmlparser');
 
 const Request = require('request');
@@ -25,7 +24,7 @@ const app = Express();
 
 const context = new DbContext(Sequelize, Config);
 
-const peopleService = new PeopleService(context.people, BCrypt, Config, Errors);
+const peopleService = new PeopleService(context.people, context.peopleData, Config, Errors);
 
 const peopleRouter = new PeopleRouter(Express, peopleService, Jwt, Config, Errors);
 

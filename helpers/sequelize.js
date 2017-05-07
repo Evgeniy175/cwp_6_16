@@ -17,7 +17,7 @@ function DbContext(Sequelize, config) {
   const Teams = require('../models/team')(Sequelize, sequelize);
 
   People.hasOne(Teams, { foreignKey: 'teamId', as: 'team' });
-  People.hasMany(PeopleData, { foreignKey: 'personId', as: 'personData' });
+  People.hasMany(PeopleData);
 
   //if (options.host !== 'localhost')
   sequelize.sync();

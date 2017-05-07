@@ -8,7 +8,14 @@ function PersonData(Sequelize, sequelize) {
     personId: Sequelize.INTEGER,
     name: Sequelize.STRING,
     phone: Sequelize.STRING,
-    workTime: Sequelize.STRING
+    workStarts: {
+      type: Sequelize.TIME,
+      allowNull: false
+    },
+    workTime: {
+      type: Sequelize.TIME,
+      allowNull: false
+    }
   });
 }
 

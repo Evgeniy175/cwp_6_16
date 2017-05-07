@@ -17,7 +17,8 @@ class TestsBase {
       personId: personId,
       name: `fake_${TestsBase.getRandomNumber()}`,
       phone: `+${TestsBase.getRandomNumber()}`,
-      workTime: `${TestsBase.getRandomNumber(24)}h/day`
+      workStarts: `${TestsBase.getRandomNumber(10)}:${TestsBase.getRandomNumber(60)}`,
+      workTime: `${TestsBase.getRandomNumber(10)}:${TestsBase.getRandomNumber(60)}`
     };
   }
 

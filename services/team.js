@@ -1,7 +1,6 @@
 class TeamService {
-  constructor(teamsRepository, bcrypt, config, errors) {
+  constructor(teamsRepository, config, errors) {
     this.teamsRepository = teamsRepository;
-    this.bcrypt = bcrypt;
     this.config = config;
     this.errors = errors;
 
@@ -53,14 +52,14 @@ class TeamService {
 
   readMany(params = {}) {
     if (!params.page) params.page = 1;
-    
+
     let findOptions = this._getReadManyOptions(params);
 
     return new Promise((resolve, reject) => {
       this.teamsRepository
-      .findAndCountAll(findOptions)
-      .then(data => resolve(this._getReadManyResults(params, findOptions, data)))
-      .catch(reject);
+        .findAndCountAll(findOptions)
+        .then(data => resolve(this._getReadManyResults(params, findOptions, data)))
+        .catch(reject);
     });
   }
 

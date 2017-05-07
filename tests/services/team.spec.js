@@ -1,6 +1,5 @@
 const TestsBase = require('../base');
 
-const BCrypt = require('bcryptjs');
 const Errors = require('../../helpers/errors');
 
 const CONFIG_PATH = process.env.NODE_ENV === 'production' ? '../../config' : '../../config-dev';
@@ -10,7 +9,7 @@ const TeamRepository = require('../mocks/repositories/base');
 const teamRepo = new TeamRepository();
 
 const TeamService = require('../../services/team');
-const service = new TeamService(teamRepo, BCrypt, Config, Errors);
+const service = new TeamService(teamRepo, Config, Errors);
 
 describe('Tests team service', async () => {
   beforeEach(() => teamRepo.mockClear());
@@ -41,7 +40,7 @@ describe('Tests team service', async () => {
 
     const readResult = await service.readMany({ params: { limit: 100 } });
     const isContains = readResult.rows.every(row => teams.includes(row));
-    
+
     expect(isContains).toBeTruthy();
   });
 

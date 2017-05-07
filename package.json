@@ -10,7 +10,6 @@
   "author": "E.Ryabchenko",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.0",
     "body-parser": "^1.16.0",
     "connect": "^3.5.0",
