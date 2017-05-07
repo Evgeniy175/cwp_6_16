@@ -1,0 +1,22 @@
+{
+  "db": {
+    "host": "ec2-23-21-220-188.compute-1.amazonaws.com",
+    "name": "d1du2lvhghpt1f",
+    "user": "wrvvasrzymilrz",
+    "pass": "1405df56b3cd1a539da5f91103022c4f1ca6a91fd2a34f4b0eaa1c2d3762e40b",
+    "dialect": "postgres"
+  },
+  "cookies": {
+    "tokenKey": "token_key",
+    "secret": "token_secret"
+  },
+  "domainRequest": {
+    "key": "fb7aca826b084569a50cfb3157e924ae"
+  },
+  "jwt": {
+    "secret": "mega_secure_key"
+  },
+  "settings": {
+    "return": "json"
+  }
+}

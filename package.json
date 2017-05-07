@@ -1,0 +1,38 @@
+{
+  "name": "cwp_16",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "jest"
+  },
+  "author": "E.Ryabchenko",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.16.0",
+    "connect": "^3.5.0",
+    "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-alpha.2",
+    "express": "^4.14.1",
+    "jest": "^19.0.2",
+    "js2xmlparser": "^3.0.0",
+    "jsonwebtoken": "^7.2.1",
+    "mysql": "^2.13.0",
+    "pg": "^6.1.5",
+    "request": "^2.79.0",
+    "sequelize": "^3.30.1",
+    "sinon": "^2.1.0"
+  },
+  "jest": {
+    "verbose": true,
+    "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "babel-jest": "^19.0.0",
+    "babel-preset-es2017": "^6.24.1",
+    "supertest": "^3.0.0"
+  }
+}

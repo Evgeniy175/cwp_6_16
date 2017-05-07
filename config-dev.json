@@ -1,0 +1,25 @@
+{
+  "db": {
+    "host": "localhost",
+    "name": "cwp_16",
+    "user": "NodeJS",
+    "pass": "NodeJS",
+    "dialect": "mysql"
+  },
+  "db_options": {
+
+  },
+  "cookies": {
+    "tokenKey": "token_key",
+    "secret": "token_secret"
+  },
+  "domainRequest": {
+    "key": "fb7aca826b084569a50cfb3157e924ae"
+  },
+  "jwt": {
+    "secret": "mega_secure_key"
+  },
+  "settings": {
+    "return": "json"
+  }
+}
