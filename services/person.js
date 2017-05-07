@@ -27,7 +27,7 @@ class PeopleService {
       this.peopleRepository.create(person)
       .then(data => {
         person.id = data.dataValues.id;
-        resolve({ success: true });
+        resolve(data);
       })
       .catch(reject);
     });
@@ -144,7 +144,7 @@ class PeopleService {
       person.id = id;
 
       return this.peopleRepository.update(p, { where: { id }, limit: 1 })
-      .then(data => resolve({ success: true }))
+      .then(resolve)
       .catch(reject);
     });
   }
@@ -152,7 +152,7 @@ class PeopleService {
   remove(id) {
     return new Promise((resolve, reject) => {
       this.peopleRepository.destroy({ where: { id } })
-      .then(data => resolve({ success: true }))
+      .then(resolve)
       .catch(reject);
     });
   }

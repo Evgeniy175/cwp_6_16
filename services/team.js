@@ -26,7 +26,7 @@ class TeamService {
       this.teamsRepository.create(team)
       .then(data => {
         team.id = data.dataValues.id;
-        resolve({ success: true });
+        resolve(data);
       })
       .catch(reject);
     });
@@ -106,7 +106,7 @@ class TeamService {
       newTeam.id = id;
 
       return this.teamsRepository.update(team, { where: { id }, limit: 1 })
-      .then(data => resolve({ success: true }))
+      .then(resolve)
       .catch(reject);
     });
   }
@@ -114,7 +114,7 @@ class TeamService {
   remove(id) {
     return new Promise((resolve, reject) => {
       this.teamsRepository.destroy({ where: { id } })
-      .then(data => resolve({ success: true }))
+      .then(resolve)
       .catch(reject);
     });
   }

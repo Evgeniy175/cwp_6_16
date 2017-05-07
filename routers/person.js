@@ -1,4 +1,4 @@
-function TeamsRouter(express, teamsService) {
+function PeopleRouter(express, peopleService) {
   const resolvers = {
     'xml': promiseResolverXml,
     'json': promiseResolverJson
@@ -15,23 +15,23 @@ function TeamsRouter(express, teamsService) {
   return router;
 
   function create(req, res) {
-    resolvers[req.format](teamsService.create(req.body.message), res, 201);
+    resolvers[req.format](peopleService.create(req.body.message), res, 201);
   }
 
   function read(req, res) {
-    resolvers[req.format](teamsService.read(req.params.id), res, 200);
+    resolvers[req.format](peopleService.read(req.params.id), res, 200);
   }
 
   function readMany(req, res) {
-    resolvers[req.format](teamsService.readMany(req.query), res, 200);
+    resolvers[req.format](peopleService.readMany(req.query), res, 200);
   }
 
   function update(req, res) {
-    resolvers[req.format](teamsService.update(req.params.id, req.body.message), res, 200);
+    resolvers[req.format](peopleService.update(req.params.id, req.body.message), res, 200);
   }
 
   function remove(req, res) {
-    resolvers[req.format](teamsService.remove(req.params.id), res, 200);
+    resolvers[req.format](peopleService.remove(req.params.id), res, 200);
   }
 
   function promiseResolverJson(promise, res, status) {
@@ -45,4 +45,4 @@ function TeamsRouter(express, teamsService) {
   }
 }
 
-module.exports = TeamsRouter;
+module.exports = PeopleRouter;
