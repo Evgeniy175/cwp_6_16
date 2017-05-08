@@ -45,7 +45,7 @@ class PeopleService {
         return;
       }
 
-      this.peopleRepository.createPeopleData(personData)
+      this.peopleDataRepository.create(personData)
         .then(res => {
           if (res) resolve(res.dataValues);
           else reject(this.errors.notFound);
@@ -78,7 +78,7 @@ class PeopleService {
         this.getStatuses(id),
         this.getStatuses(anotherId)
       ])
-      .spread((first, second) => this.isInWork(first) && this.isInWork(second))
+      .spread((first, second) => ({ isWorkingTogetherNow: this.isInWork(first) && this.isInWork(second) }))
       .then(resolve)
       .catch(reject);
     });
@@ -93,7 +93,7 @@ class PeopleService {
 
     return new Promise((resolve, reject) => {
       this.getPersonData(id)
-      .then(personData => personData.dataValues.map(pdItem => this.formatPersonDataItem(pdItem)))
+      .then(personData => personData.map(pdItem => this.formatPersonDataItem(pdItem)))
       .then(resolve)
       .catch(reject);
     });

@@ -17,7 +17,7 @@ function PersonData(Sequelize, sequelize) {
       allowNull: false
     },
     timezone: {
-      type: Sequelize.STIRNG,
+      type: Sequelize.STRING,
       allowNull: false
     }
   });

@@ -8,7 +8,10 @@ function PeopleRouter(express, peopleService) {
 
   router.post('/:id/data', createPersonData);
   router.post('/', create);
+
+  // is two persons working now?
   router.get('/:id/intersection/:anotherId', isIntersection);
+
   router.get('/:id/statuses', getStatuses);
   router.get('/:id', read);
   router.get('/', readMany);
