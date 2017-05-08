@@ -1,9 +1,12 @@
+const Promise = require('bluebird');
+
 class PeopleService {
-  constructor(peopleRepository, peopleDataRepository, config, errors) {
+  constructor(peopleRepository, peopleDataRepository, config, errors, moment) {
     this.peopleRepository = peopleRepository;
     this.peopleDataRepository = peopleDataRepository;
     this.config = config;
     this.errors = errors;
+    this.moment = moment;
 
     this.defaultOptions = {
       readMany: {
@@ -23,13 +26,13 @@ class PeopleService {
         reject(validationErrors);
         return;
       }
-      
+
       this.peopleRepository.create(person)
-      .then(data => {
-        person.id = data.dataValues.id;
-        resolve(data);
-      })
-      .catch(reject);
+        .then(data => {
+          person.id = data.dataValues.id;
+          resolve(data);
+        })
+        .catch(reject);
     });
   }
 
@@ -43,24 +46,6 @@ class PeopleService {
       }
 
       this.peopleRepository.createPeopleData(personData)
-        .then(res => {
-          if (res) resolve(res.dataValues);
-          else reject(this.errors.notFound);
-        })
-        .catch(reject);
-    });
-  }
-
-  getPersonData(personId) {
-    personId = parseInt(personId);
-
-    return new Promise((resolve, reject) => {
-      if (isNaN(personId)) {
-        reject(this.errors.invalidId);
-        return;
-      }
-
-      this.peopleRepository.getPeopleData(personId)
         .then(res => {
           if (res) resolve(res.dataValues);
           else reject(this.errors.notFound);
@@ -85,6 +70,66 @@ class PeopleService {
       })
       .catch(reject);
     });
+  }
+
+  isIntersection(id, anotherId) {
+    return new Promise((resolve, reject) => {
+      Promise.all([
+        this.getStatuses(id),
+        this.getStatuses(anotherId)
+      ])
+      .spread((first, second) => this.isInWork(first) && this.isInWork(second))
+      .then(resolve)
+      .catch(reject);
+    });
+  }
+
+  isInWork(personData) {
+    return personData.some(pd => pd.status === 'In work');
+  }
+
+  getStatuses(id) {
+    id = parseInt(id);
+
+    return new Promise((resolve, reject) => {
+      this.getPersonData(id)
+      .then(personData => personData.dataValues.map(pdItem => this.formatPersonDataItem(pdItem)))
+      .then(resolve)
+      .catch(reject);
+    });
+  }
+
+  getPersonData(id) {
+    id = parseInt(id);
+
+    return new Promise((resolve, reject) => {
+      this.peopleRepository.findById(id)
+      .then(p => p.getPeopleData())
+      .then(resolve)
+      .catch(reject);
+    });
+  }
+
+  formatPersonDataItem(personDataItem) {
+    const now = this.moment.tz(personDataItem.timezone);
+    const workTime = this.moment(personDataItem.workTime, 'HH:mm');
+
+    const workStarts = this.moment.tz(personDataItem.workStarts, 'HH:mm', personDataItem.timezone);
+    const workEnds = workStarts.clone().add({ hour: workTime.hour(), minute: workTime.minute() });
+
+    return this.formatWorkStatus(personDataItem, workStarts, workEnds, now);
+  }
+
+  formatWorkStatus(personDataItem, startTime, endTime, now) {
+    const isInWork = now.isBetween(startTime, endTime);
+
+    return {
+      personDataItem,
+      workStarts: startTime.format(),
+      workEnds: endTime.format(),
+      now: now.format(),
+      status: isInWork ? 'In work' : 'Sleep'
+    };
   }
 
   readMany(params = {}) {

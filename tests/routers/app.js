@@ -1,5 +1,6 @@
 const Express = require('express');
 const Sequelize = require('sequelize');
+const moment = require('moment-timezone');
 
 const CookieParser = require('cookie-parser');
 const BodyParser = require('body-parser');
@@ -32,7 +33,7 @@ const PersonRepository = require('../mocks/repositories/person');
 const personRepo = new PersonRepository(personDataRepo);
 
 const teamsService = new TeamsService(teamRepo, Config, Errors);
-const peopleService = new PeopleService(personRepo, personDataRepo, Config, Errors);
+const peopleService = new PeopleService(personRepo, personDataRepo, Config, Errors, moment);
 
 const permissionsRouter = new PermissionsRouter(Express, Config);
 const teamsRouter = new TeamsRouter(Express, teamsService);

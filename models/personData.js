@@ -15,6 +15,10 @@ function PersonData(Sequelize, sequelize) {
     workTime: {
       type: Sequelize.TIME,
       allowNull: false
+    },
+    timezone: {
+      type: Sequelize.STIRNG,
+      allowNull: false
     }
   });
 }

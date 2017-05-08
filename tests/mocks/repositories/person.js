@@ -12,7 +12,7 @@ class UsersRepository extends Base {
 
     if (user) {
       user.createPeopleData = this.createPeopleData.bind(this);
-      user.getPeopleData = this.getPeopleData.bind(this);
+      user.getPeopleData = this.getPeopleData.bind(this, id);
     }
     
     return Promise.resolve(user);

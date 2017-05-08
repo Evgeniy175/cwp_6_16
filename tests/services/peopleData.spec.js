@@ -43,7 +43,7 @@ describe('Tests people data service', async () => {
     }
 
     const readResult = await personService.getPersonData(person.id);
-    const isContains = personDatas.every(row => readResult.includes(row));
+    const isContains = personDatas.every(row => readResult.dataValues.includes(row));
 
     expect(isContains).toBeTruthy();
   });

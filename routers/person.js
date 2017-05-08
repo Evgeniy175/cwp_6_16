@@ -6,7 +6,10 @@ function PeopleRouter(express, peopleService) {
 
   const router = express.Router();
 
+  router.post('/:id/data', createPersonData);
   router.post('/', create);
+  router.get('/:id/intersection/:anotherId', isIntersection);
+  router.get('/:id/statuses', getStatuses);
   router.get('/:id', read);
   router.get('/', readMany);
   router.put('/:id', update);
@@ -14,8 +17,20 @@ function PeopleRouter(express, peopleService) {
 
   return router;
 
+  function createPersonData(req, res) {
+    resolvers[req.format](peopleService.createPersonData(req.body.message), res, 201);
+  }
+
   function create(req, res) {
     resolvers[req.format](peopleService.create(req.body.message), res, 201);
+  }
+
+  function isIntersection(req, res) {
+    resolvers[req.format](peopleService.isIntersection(req.params.id, req.params.anotherId), res, 200);
+  }
+
+  function getStatuses(req, res) {
+    resolvers[req.format](peopleService.getStatuses(req.params.id), res, 200);
   }
 
   function read(req, res) {
@@ -35,13 +50,13 @@ function PeopleRouter(express, peopleService) {
   }
 
   function promiseResolverJson(promise, res, status) {
-    promise.then((data) => {res.status(status); res.json(data);})
-    .catch((err) => {res.error(err);});
+    promise.then(data => {res.status(status); res.json(data);})
+    .catch(err => {res.error(err);});
   }
 
   function promiseResolverXml(promise, res, status) {
-    promise.then((data) => { res.xml(status, "data", data);})
-    .catch((err) => {res.error(err);});
+    promise.then(data => { res.xml(status, "data", data);})
+    .catch(err => {res.error(err);});
   }
 }
 

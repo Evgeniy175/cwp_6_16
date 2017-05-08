@@ -18,13 +18,13 @@ function PermissionRouter(express, config) {
   }
 
   function promiseResolverJson(promise, res, status) {
-    promise.then((data) => {res.status(status); res.json(data);})
-    .catch((err) => {res.error(err);});
+    promise.then(data => {res.status(status); res.json(data);})
+    .catch(err => {res.error(err);});
   }
 
   function promiseResolverXml(promise, res, status) {
-    promise.then((data) => {res.xml(status, 'data', data);})
-    .catch((err) => {res.error(err);});
+    promise.then(data => {res.xml(status, 'data', data);})
+    .catch(err => {res.error(err);});
   }
 }
 

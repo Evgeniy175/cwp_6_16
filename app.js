@@ -1,5 +1,6 @@
 const Express = require('express');
 const Sequelize = require('sequelize');
+const moment = require('moment-timezone');
 
 const CookieParser = require('cookie-parser');
 const BodyParser = require('body-parser');
@@ -25,7 +26,7 @@ const app = Express();
 const context = new DbContext(Sequelize, Config);
 
 const teamsService = new TeamsService(context.teams, Config, Errors);
-const peopleService = new PeopleService(context.people, context.peopleData, Config, Errors);
+const peopleService = new PeopleService(context.people, context.peopleData, Config, Errors, moment);
 
 const permissionsRouter = new PermissionsRouter(Express, Config);
 const teamsRouter = new TeamsRouter(Express, teamsService);

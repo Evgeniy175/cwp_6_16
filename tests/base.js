@@ -1,3 +1,5 @@
+const moment = require('moment-timezone');
+
 class TestsBase {
 	static generateTeam() {
     return {
@@ -13,13 +15,23 @@ class TestsBase {
   }
 
   static generatePersonData(personId) {
+	  const timezones = moment.tz.names();
+	  const idx = TestsBase.getRandomNumber(timezones.length);
+
     return {
       personId: personId,
       name: `fake_${TestsBase.getRandomNumber()}`,
       phone: `+${TestsBase.getRandomNumber()}`,
-      workStarts: `${TestsBase.getRandomNumber(10)}:${TestsBase.getRandomNumber(60)}`,
-      workTime: `${TestsBase.getRandomNumber(10)}:${TestsBase.getRandomNumber(60)}`
+      workStarts: TestsBase.generateTime(),
+      workTime: TestsBase.generateTime(),
+      timezone: timezones[idx]
     };
+  }
+
+  static generateTime() {
+	  const h = TestsBase.getRandomNumber(10);
+	  const m = TestsBase.getRandomNumber(60);
+	  return `${h < 10 ? `0${h}` : h}:${m < 10 ? `0${m}` : m}`;
   }
 
   static getRandomNumber(max) {

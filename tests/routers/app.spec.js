@@ -1,6 +1,8 @@
+const request = require('supertest');
+const moment = require('moment-timezone');
+
 const TestsBase = require('../base');
 const server = require('./app');
-const request = require('supertest');
 const Errors = require('../../helpers/errors');
 const _ = require('lodash');
 
@@ -77,6 +79,72 @@ describe('app tests', async () => {
     await post('/teams', 201, team);
     await deleteRequest(`/teams/${createdTeam.id}`, 200);
     await get(`/teams/${createdTeam.id}`, 404);
+  });
+
+  ////////////////////////////////////
+  // person data tests              //
+  ////////////////////////////////////
+
+  it('>> person data: get status', async () => {
+    const personDatas = [];
+
+    const person = TestsBase.generatePerson();
+    const createRes = await post('/people', 201, person);
+    const createdPerson = JSON.parse(createRes.text).dataValues;
+
+    for (let i = 0; i < 20; i++) {
+      const personData = TestsBase.generatePersonData(createdPerson.id);
+      const personDataRes = await post(`/people/${createdPerson.id}/data`, 201, personData);
+      const createdPersonData = JSON.parse(personDataRes.text);
+      personDatas.push(createdPersonData);
+    }
+
+    const personDataRes = await get(`/people/${createdPerson.id}/statuses`, 200);
+    const readedPersonData = JSON.parse(personDataRes.text);
+  });
+
+  it('>> person data: confirm no intersection for 2 persons', async () => {
+    const person = TestsBase.generatePerson();
+    const createRes = await post('/people', 201, person);
+    const createdPerson = JSON.parse(createRes.text).dataValues;
+
+    const anotherPerson = TestsBase.generatePerson();
+    const anotherCreateRes = await post('/people', 201, anotherPerson);
+    const anotherCreatedPerson = JSON.parse(anotherCreateRes.text).dataValues;
+
+    for (let i = 0; i < 20; i++) {
+      const personData = TestsBase.generatePersonData(createdPerson.id);
+      await post(`/people/${createdPerson.id}/data`, 201, personData);
+    }
+
+    const resp = await get(`/people/${createdPerson.id}/intersection/${anotherCreatedPerson.id}`, 200);
+    const result = JSON.parse(resp.text);
+
+    expect(result).toBeFalsy();
+  });
+
+  it('>> person data: confirm intersection for 2 persons', async () => {
+    const person = TestsBase.generatePerson();
+    const createRes = await post('/people', 201, person);
+    const createdPerson = JSON.parse(createRes.text).dataValues;
+
+    const anotherPerson = TestsBase.generatePerson();
+    const anotherCreateRes = await post('/people', 201, anotherPerson);
+    const anotherCreatedPerson = JSON.parse(anotherCreateRes.text).dataValues;
+
+    const personData = TestsBase.generatePersonData(createdPerson.id);
+    personData.workStarts = moment.tz(personData.timezone).subtract(5, 'second').format('HH:mm');
+    personData.workTime = '00:05';
+
+    await post(`/people/${createdPerson.id}/data`, 201, personData);
+
+    personData.personId = anotherCreatedPerson.id;
+    await post(`/people/${anotherCreatedPerson.id}/data`, 201, personData);
+
+    const resp = await get(`/people/${createdPerson.id}/intersection/${anotherCreatedPerson.id}`, 200);
+    const result = JSON.parse(resp.text);
+
+    expect(result).toBeTruthy();
   });
 });
 
