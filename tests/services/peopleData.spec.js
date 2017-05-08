@@ -1,6 +1,7 @@
 const TestsBase = require('../base');
 
 const Errors = require('../../helpers/errors');
+const tasksIntersectionHelper = require('../../helpers/tasks-intersection');
 
 const CONFIG_PATH = process.env.NODE_ENV === 'production' ? '../../config' : '../../config-dev';
 const Config = require(CONFIG_PATH);
@@ -18,7 +19,7 @@ const TeamService = require('../../services/team');
 const teamService = new TeamService(teamRepo, Config, Errors);
 
 const PersonService = require('../../services/person');
-const personService = new PersonService(personRepo, personDataRepo, Config, Errors);
+const personService = new PersonService(personRepo, personDataRepo, tasksIntersectionHelper, Config, Errors);
 
 describe('Tests people data service', async () => {
   beforeEach(() => {

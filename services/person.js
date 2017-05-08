@@ -84,6 +84,7 @@ class PeopleService {
       .spread((person, anotherPerson, personData, anotherPersonData) => {
         if (person.teamId !== anotherPerson.teamId) return [];
 
+      throw '----' + JSON.stringify(personData) + '\n\n\----\n\n' + JSON.stringify(anotherPersonData)
         const personTasks = personData.map(elem => elem.dataValues);
         const anotherPersonTasks = anotherPersonData.map(elem => elem.dataValues);
 

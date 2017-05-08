@@ -1,6 +1,7 @@
 const TestsBase = require('../base');
 
 const Errors = require('../../helpers/errors');
+const tasksIntersectionHelper = require('../../helpers/tasks-intersection');
 
 const CONFIG_PATH = process.env.NODE_ENV === 'production' ? '../../config' : '../../config-dev';
 const Config = require(CONFIG_PATH);
@@ -15,7 +16,7 @@ const TeamRepository = require('../mocks/repositories/base');
 const teamRepo = new TeamRepository();
 
 const PersonService = require('../../services/person');
-const service = new PersonService(personRepo, personDataRepo, Config, Errors);
+const service = new PersonService(personRepo, personDataRepo, tasksIntersectionHelper, Config, Errors);
 
 const TeamService = require('../../services/team');
 const teamService = new TeamService(teamRepo, Config, Errors);
@@ -127,7 +128,6 @@ describe('Tests person service', async () => {
       await service.read(person.id);
     }
     catch(err) {
-
       expect(err).toBe(Errors.notFound);
       isErrorThrowed = true;
     }
