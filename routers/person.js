@@ -8,10 +8,7 @@ function PeopleRouter(express, peopleService) {
 
   router.post('/:id/data', createPersonData);
   router.post('/', create);
-
-  // is two persons working now?
-  router.get('/:id/intersection/:anotherId', isIntersection);
-
+  router.get('/:id/intersection/:anotherId', getIntersection);
   router.get('/:id/statuses', getStatuses);
   router.get('/:id', read);
   router.get('/', readMany);
@@ -28,8 +25,8 @@ function PeopleRouter(express, peopleService) {
     resolvers[req.format](peopleService.create(req.body.message), res, 201);
   }
 
-  function isIntersection(req, res) {
-    resolvers[req.format](peopleService.isIntersection(req.params.id, req.params.anotherId), res, 200);
+  function getIntersection(req, res) {
+    resolvers[req.format](peopleService.getIntersection(req.params.id, req.params.anotherId), res, 200);
   }
 
   function getStatuses(req, res) {

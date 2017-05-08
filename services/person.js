@@ -1,9 +1,10 @@
 const Promise = require('bluebird');
 
 class PeopleService {
-  constructor(peopleRepository, peopleDataRepository, config, errors, moment) {
+  constructor(peopleRepository, peopleDataRepository, tasksIntersectionHelper, config, errors, moment) {
     this.peopleRepository = peopleRepository;
     this.peopleDataRepository = peopleDataRepository;
+    this.tasksIntersectionHelper = tasksIntersectionHelper;
     this.config = config;
     this.errors = errors;
     this.moment = moment;
@@ -72,13 +73,22 @@ class PeopleService {
     });
   }
 
-  isIntersection(id, anotherId) {
+  getIntersection(id, anotherId) {
     return new Promise((resolve, reject) => {
       Promise.all([
-        this.getStatuses(id),
-        this.getStatuses(anotherId)
+        this.read(id),
+        this.read(anotherId),
+        this.getPersonData(id),
+        this.getPersonData(anotherId)
       ])
-      .spread((first, second) => ({ isWorkingTogetherNow: this.isInWork(first) && this.isInWork(second) }))
+      .spread((person, anotherPerson, personData, anotherPersonData) => {
+        if (person.teamId !== anotherPerson.teamId) return [];
+
+        const personTasks = personData.map(elem => elem.dataValues);
+        const anotherPersonTasks = anotherPersonData.map(elem => elem.dataValues);
+
+        return this.tasksIntersectionHelper.getIntersections(personTasks, anotherPersonTasks);
+      })
       .then(resolve)
       .catch(reject);
     });
@@ -201,7 +211,7 @@ class PeopleService {
       .catch(reject);
     });
   }
-  
+
   _getValidationErrors(person) {
     let validationErrors = this.validate(person).join('; ');
 

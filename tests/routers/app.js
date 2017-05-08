@@ -11,6 +11,7 @@ const Config = require(CONFIG_PATH);
 const Errors = require('../../helpers/errors');
 const DbContext = require('../../helpers/sequelize');
 const ExpressExtensions = require('../../helpers/express')(Express, Config, Js2XmlParser);
+const tasksIntersectionHelper = require('../../helpers/tasks-intersection');
 
 const TeamsService = require('../../services/team');
 const PeopleService = require('../../services/person');
@@ -33,7 +34,7 @@ const PersonRepository = require('../mocks/repositories/person');
 const personRepo = new PersonRepository(personDataRepo);
 
 const teamsService = new TeamsService(teamRepo, Config, Errors);
-const peopleService = new PeopleService(personRepo, personDataRepo, Config, Errors, moment);
+const peopleService = new PeopleService(personRepo, personDataRepo, tasksIntersectionHelper, Config, Errors, moment);
 
 const permissionsRouter = new PermissionsRouter(Express, Config);
 const teamsRouter = new TeamsRouter(Express, teamsService);
