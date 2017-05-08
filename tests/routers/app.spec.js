@@ -101,6 +101,8 @@ describe('app tests', async () => {
 
     const personDataRes = await get(`/people/${createdPerson.id}/statuses`, 200);
     const readedPersonData = JSON.parse(personDataRes.text);
+
+    expect(readedPersonData.length).toBe(personDatas.length);
   });
 
   it('>> person data: confirm no intersection for 2 persons', async () => {
@@ -120,7 +122,7 @@ describe('app tests', async () => {
     const resp = await get(`/people/${createdPerson.id}/intersection/${anotherCreatedPerson.id}`, 200);
     const result = JSON.parse(resp.text);
 
-    expect(result).toBeFalsy();
+    expect(result.isWorkingTogetherNow).toBeFalsy();
   });
 
   it('>> person data: confirm intersection for 2 persons', async () => {
@@ -133,7 +135,7 @@ describe('app tests', async () => {
     const anotherCreatedPerson = JSON.parse(anotherCreateRes.text).dataValues;
 
     const personData = TestsBase.generatePersonData(createdPerson.id);
-    personData.workStarts = moment.tz(personData.timezone).subtract(5, 'second').format('HH:mm');
+    personData.workStarts = moment.tz(personData.timezone).subtract(15, 'second').format('HH:mm');
     personData.workTime = '00:05';
 
     await post(`/people/${createdPerson.id}/data`, 201, personData);
@@ -144,7 +146,7 @@ describe('app tests', async () => {
     const resp = await get(`/people/${createdPerson.id}/intersection/${anotherCreatedPerson.id}`, 200);
     const result = JSON.parse(resp.text);
 
-    expect(result).toBeTruthy();
+    expect(result.isWorkingTogetherNow).toBeTruthy();
   });
 });
 
